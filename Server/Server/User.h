@@ -8,7 +8,7 @@ class User {
 public:
 	User();
 	User(std::string name = "deleted", std::string pass = "admin", int ID = 0);
-	void send_message(Message text); // заменить string на Message
+	void send_message(Message text);
 	bool is_password_correct(std::string pass);
 	bool change_password(std::string old_pass, std::string new_pass);
 	std::string get_username();

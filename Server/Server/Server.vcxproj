@@ -72,8 +72,8 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>C:\libraries\SFML-2.5.1\include;$(IncludePath)</IncludePath>
-    <LibraryPath>C:\libraries\SFML-2.5.1\lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>C:\libraries\SFML-2.5.1\include;$(IncludePath);C:\libraries\rapidjson</IncludePath>
+    <LibraryPath>C:\libraries\SFML-2.5.1\lib;$(LibraryPath);C:\libraries\rapidjson</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>

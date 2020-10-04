@@ -3,6 +3,7 @@
 #include <string>
 #include <vector>
 #include "Message.h"
+#include "Network_client.h"
 
 class User {
 public:

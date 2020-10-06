@@ -1,15 +1,15 @@
 /*
        Servers operation codes
-0: create new_user
+0: create new user
 	expected: (username, password, ID)
 	returns:  if ((input correct) && (username is available)) {return 1;} else {return 0;}
 
-0: create new_conversation
+1: create new conversation
 	expected: (username, password, conversation name)
 	returns:
 
 2: set information
-	expected: (username, password, file addres (ex. C:\Program Files\BmChatServer\Users\Username\password.json), newinformation)
+	expected: (username, password, file addres (ex. BmChatServer\Users\Username\password.json), newinformation)
 	returns: if ((input correct) && (password correct) && (username have permission to change information)) {return 1;} else {return 0;} 
 3: 
 	expected:

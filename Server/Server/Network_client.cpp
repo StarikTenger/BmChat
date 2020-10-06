@@ -2,7 +2,7 @@
 
 sf::Packet& operator <<(sf::Packet& packet, const rapidjson::Document& doc)
 {
-	
+	doc.
 	return packet;
 }
 

@@ -163,7 +163,11 @@
     <ClInclude Include="Dialog.h" />
     <ClInclude Include="Message.h" />
     <ClInclude Include="Network_client.h" />
+    <ClInclude Include="resource.h" />
     <ClInclude Include="User.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="Server.rc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets" />

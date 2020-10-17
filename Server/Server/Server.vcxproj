@@ -156,6 +156,7 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Message.cpp" />
     <ClCompile Include="Network_client.cpp" />
+    <ClCompile Include="Network_database.cpp" />
     <ClCompile Include="User.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -163,6 +164,7 @@
     <ClInclude Include="Dialog.h" />
     <ClInclude Include="Message.h" />
     <ClInclude Include="Network_client.h" />
+    <ClInclude Include="Network_database.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="User.h" />
   </ItemGroup>

@@ -106,6 +106,6 @@ void User::change_dialogs_ID(std::vector <int> IDs) {
 	dialogs_ID = IDs;
 	//обращение к серверу с целью обновления информации о dialogs_ID пользователя
 }
-void User::send_message(Message text) {
-	//обращение к серверу с целью создания нового сообщения
-}
+//void User::send_message(Message text) {
+//	//обращение к серверу с целью создания нового сообщения
+//}

@@ -30,6 +30,8 @@ std::string Database::array_parce(std::vector<int> *v){
 
 std::vector<int> Database::array_unparce(rapidjson::Document *d){
 	std::vector<int> ans;
+	if (!((*d).IsArray()))
+		return ans;
 	for (auto i = (*d).GetArray().Begin(); i != (*d).GetArray().End(); i++) {
 		ans.push_back(i->GetInt());
 	}
@@ -53,6 +55,8 @@ std::string Database::string_parce(std::string str)
 std::string Database::string_unparce(rapidjson::Document* d)
 {
 	std::string ans = "";
+	if (!((*d).IsArray()))
+		return ans;
 	for (auto i = (*d).GetArray().Begin(); i != (*d).GetArray().End(); i++) {
 		ans += (char)i->GetInt();
 	}
@@ -137,7 +141,7 @@ void Database::create_user(std::string username, std::string password, int user_
 void Database::add_member(int conversation_id, int user_id) {
 	char u_id[20], c_id[20];
 	itoa(conversation_id, c_id, 10);
-	itoa(user_id, c_id, 10);
+	itoa(user_id, u_id, 10);
 	
 	std::string path = "\\Users\\", lp;
 	lp = path + u_id + "\\Conversations.json";
@@ -164,7 +168,7 @@ void Database::add_member(int conversation_id, int user_id) {
 	create_path(local_path + lp);
 	rapidjson::Document d2;
 	get_data(lp, &d2);
-	std::vector<int> users_list = array_unparce(&d);
+	std::vector<int> users_list = array_unparce(&d2);
 	was = false;
 	for (int i = 0; i < users_list.size(); i++)
 		if (users_list[i] == user_id)
@@ -212,14 +216,14 @@ void Database::add_message(int user_id, std::string password, int conversation_i
 	path += m_id;
 	
 	rapidjson::Document data;
-	lp = path + "User_id.json";
+	lp = path + "\\User_id.json";
 	std::string id = string_parce(u_id);
 	rapidjson::StringStream s(id.c_str());
 	data.ParseStream(s);
 	set_data(lp, &data);
 
 	rapidjson::Document data2;
-	lp = path + "Text.json";
+	lp = path + "\\Text.json";
 	text = string_parce(text);
 	rapidjson::StringStream s2(text.c_str());
 	data2.ParseStream(s2);

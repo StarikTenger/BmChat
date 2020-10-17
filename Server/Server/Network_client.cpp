@@ -1,12 +1,29 @@
 #include "Network_client.h"
 
-sf::Packet& operator <<(sf::Packet& packet, const rapidjson::Document& doc)
+sf::Packet& operator <<(sf::Packet& packet, rapidjson::Document& doc)
 {
+	packet << (doc.Size());
+	for (auto i = doc.GetArray().Begin(); i != doc.GetArray().End(); i++) {
+		packet << (i->GetInt());
+	} 
 	return packet;
 }
 
 sf::Packet& operator >>(sf::Packet& packet, rapidjson::Document& doc)
 {
+	int len, k;
+	packet >> len;
+	std::string arr = "[";
+	for (int i = 0; i < len; i++) {
+		packet >> k;
+		char buff[20];
+		itoa(k, buff, 10);
+		arr += buff;
+		arr += ",";
+ 	}
+	arr[arr.size() - 1] = ']';
+	rapidjson::StringStream s(arr.c_str());
+	doc.ParseStream(s);
 	return packet;
 }
 
@@ -27,7 +44,7 @@ void Network_client::change_port(int newport) {
 		std::cout << "connection error: server is unavailable\n";
 }
 
-int Network_client::send(int operation_code, rapidjson::Document data) {
+int Network_client::send(int operation_code, rapidjson::Document *data) {
 	sf::Packet pack;
 	pack << operation_code << data;
 	if (socket.send(pack) != sf::Socket::Done)
@@ -39,15 +56,14 @@ int Network_client::send(int operation_code, rapidjson::Document data) {
 	return server_answer;
 }
 
-//std::pair<int, rapidjson::Document> Network_client::receive(int operation_code, rapidjson::Document data) {
-//	sf::Packet pack;
-//	pack << operation_code << data;
-//	if (socket.send(pack) != sf::Socket::Done)
-//		std::cout << "sending error: please repeat later\n";
-//	if (socket.receive(pack) != sf::Socket::Done)
-//		std::cout << "recive error: server is unavailable\n";
-//	int server_answer;
-//	rapidjson::Document message;
-//	pack >> server_answer;
-//	return std::make_pair(server_answer, /*message*/);
-//}
+int Network_client::receive(int operation_code, rapidjson::Document *data, rapidjson::Document *ans) {
+	sf::Packet pack;
+	pack << operation_code << data;
+	if (socket.send(pack) != sf::Socket::Done)
+		std::cout << "sending error: please repeat later\n";
+	if (socket.receive(pack) != sf::Socket::Done)
+		std::cout << "recive error: server is unavailable\n";
+	int server_answer;
+	pack >> server_answer >> (*ans);
+	return server_answer;
+}

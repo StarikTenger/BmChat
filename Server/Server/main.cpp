@@ -9,8 +9,6 @@
 #include "Database.h"
 
 int main() {
-    Database a("C:\\Users\\mea25\\Desktop\\yu");
-    a.create_user("Admin", "admin", a.new_user_ID());
-    std::cout << a.check_password(0, "notadmin") << " " << a.check_password(0, "admin");
+    
     return 0;
 }

@@ -26,6 +26,23 @@
 ...
 */
 #pragma once
+#define _CRT_NONSTDC_NO_DEPRECATE
+#include <SFML/Network.hpp>
+#include <rapidjson.h>
+#include <document.h>
+#include <stream.h>
+#include <string>
+#include <fstream>
+#include "User.h"
+#include <cstdio>
+#include <filereadstream.h>
+#include <filewritestream.h>
+#include <writer.h>
+#include <windows.h>
+#include <io.h>
+#include <direct.h>
+#include <vector>
+#include "Message.h"
 #include <SFML/Network.hpp>
 #include <iostream>
 #include <string>
@@ -39,8 +56,8 @@ public:
 	Network_client();
 	Network_client(int port1 = 53000, std::string serverIP1 = "localhost");
 	void change_port(int newport);
-	int send(int operation_code, rapidjson::Document data);
-	std::pair<int, rapidjson::Document> receive(int operation_code, rapidjson::Document data);
+	int send(int operation_code, rapidjson::Document *data);
+	int receive(int operation_code, rapidjson::Document *data, rapidjson::Document *ans);
 private:
 	int port;
 	std::string serverIP;

@@ -254,10 +254,41 @@ rapidjson::Document Database::get_message(int conversation_id, int message_id) {
 	return m.message_parce();
 }
 
-//rapidjson::Document Database::get_members(int conversation_id) {
-//
-//}
-//
-//rapidjson::Document Database::get_user(int user_id) {
-//
-//}
+rapidjson::Document Database::get_members(int conversation_id) {
+	char c_id[20];
+	itoa(conversation_id, c_id, 10);
+
+	std::string path = "\\Conversations\\", lp;
+	lp = path + c_id + "\\Users.json";
+	create_path(local_path + lp);
+	rapidjson::Document d2;
+	get_data(lp, &d2);
+
+	return d2;
+}
+
+rapidjson::Document Database::get_user(int user_id) {
+	char u_id[20];
+	itoa(user_id, u_id, 10);
+
+	std::string path = "\\Users\\", lp;
+	path += u_id;
+
+	lp = path + "\\Username.json";
+	rapidjson::Document data1;
+	get_data(lp, &data1);
+
+	lp = path + "\\Password.json";
+	rapidjson::Document data2;
+	get_data(lp, &data2);
+
+	lp = path + "\\Conversations.json";
+	create_path(local_path + lp);
+	rapidjson::Document data3;
+	get_data(lp, &data3);
+	
+	User us(string_unparce(&data1), string_unparce(&data2), user_id);
+	us.change_dialogs_ID(array_unparce(&data3));
+
+	return us.user_parce();
+}

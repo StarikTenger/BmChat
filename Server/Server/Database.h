@@ -15,6 +15,7 @@
 #include <io.h>
 #include <direct.h>
 #include <vector>
+#include "Message.h"
 
 class Database {
 public:
@@ -28,8 +29,8 @@ public:
 	void add_member(int conversation_id, int user_id);
 	void add_message(int user_id, std::string password, int conversation_id, int message_id, std::string text);
 	rapidjson::Document get_message(int conversation_id, int message_id);
-	//rapidjson::Document get_members(int conversation_id);
-	//rapidjson::Document get_user(int user_id);
+	rapidjson::Document get_members(int conversation_id);
+	rapidjson::Document get_user(int user_id);
 private:
 	std::string local_path; // path to server folder (any request to the system forms as request(local_path+path ...))
 	int max_user_id, max_conversation_id;

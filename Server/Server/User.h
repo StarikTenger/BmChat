@@ -20,7 +20,7 @@
 
 class User {
 public:
-	User();
+	//User();
 	User(std::string name = "", std::string pass = "", int ID = 0);
 
 	rapidjson::Document user_parce();

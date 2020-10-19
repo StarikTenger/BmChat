@@ -193,6 +193,13 @@ void Database::create_conversation(int user_id, std::string password, std::strin
 	std::string path = "\\Conversations\\", lp;
 	path += c_id;
 
+	lp = path + "\\max_message_id.json";
+	rapidjson::Document d;
+	std::string num = "[0]";
+	rapidjson::StringStream s1(num.c_str());
+	d.ParseStream(s1);
+	set_data(lp, &d);
+
 	lp = path + "\\conversation_name.json";
 	rapidjson::Document data;
 	conversation_name = string_parce(conversation_name);
@@ -202,6 +209,26 @@ void Database::create_conversation(int user_id, std::string password, std::strin
 
 	add_member(conversation_id, user_id);
 }
+
+int Database::new_message_id(int conversation_id) {
+	char c_id[20];
+	itoa(conversation_id, c_id, 10);
+	std::string path = "\\Conversations\\", lp;
+	path += c_id;
+
+	lp = path + "\\max_message_id.json";
+	rapidjson::Document d;
+	std::vector<int> ans = { 0 };
+	if (get_data(lp, &d))
+		ans = array_unparce(&d);
+	ans[0]++;
+	std::string arr = array_parce(&ans);
+	rapidjson::StringStream s(arr.c_str());
+	d.ParseStream(s);
+	set_data(lp, &d);
+	return ans[0] - 1;
+}
+
 void Database::add_message(int user_id, std::string password, int conversation_id, int message_id, std::string text) {
 	if (check_password(user_id, password) == 0)
 		return;

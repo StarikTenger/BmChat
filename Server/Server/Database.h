@@ -23,6 +23,7 @@ public:
 	Database(std::string local_path);
 	int new_user_ID();
 	int new_conversation_id();
+	int new_message_id(int conversation_id);
 	void create_user(std::string username, std::string password, int user_id);
 	int check_password(int user_id, std::string password);
 	void create_conversation(int user_id, std::string password, std::string conversation_name, int conversation_id);

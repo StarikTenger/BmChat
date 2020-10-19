@@ -1,5 +1,9 @@
 #include "User.h"
-User::User() {}
+//User::User() {
+//	username = "";
+//	password = "";
+//	user_ID = 0;
+//}
 User::User(std::string name, std::string pass, int ID) {
 	username = name;
 	password = pass;

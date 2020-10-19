@@ -8,7 +8,7 @@
 	expected: (username, password, conversation name)
 	returns:
 
-2: set information
+2: set new username
 	expected: (username, password, file addres (ex. BmChatServer\Users\Username\password.json), newinformation)
 	returns: if ((input correct) && (password correct) && (username have permission to change information)) {return 1;} else {return 0;} 
 3: 

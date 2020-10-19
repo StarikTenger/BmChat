@@ -2,14 +2,14 @@
        Servers operation codes
 0: create new user
 	expected: (username, password, ID)
-	returns:  if ((input correct) && (username is available)) {return 1;} else {return 0;}
+	returns:  if (input correct) {return 1;} else {return 0;}
 
 1: create new conversation
-	expected: (username, password, conversation name)
-	returns:
+	expected: (password, conversation name, user_ID, conversation_ID)
+	returns:  if (input correct) {return 1;} else {return 0;}
 
 2: set new username
-	expected: (username, password, file addres (ex. BmChatServer\Users\Username\password.json), newinformation)
+	expected: (password, new_username, user_id)
 	returns: if ((input correct) && (password correct) && (username have permission to change information)) {return 1;} else {return 0;} 
 3: 
 	expected:

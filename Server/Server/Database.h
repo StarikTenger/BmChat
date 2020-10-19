@@ -26,6 +26,7 @@ public:
 	int new_message_id(int conversation_id);
 	void create_user(std::string username, std::string password, int user_id);
 	int check_password(int user_id, std::string password);
+	int change_username(int user_id, std::string _password, std::string _new_username);
 	void create_conversation(int user_id, std::string password, std::string conversation_name, int conversation_id);
 	void add_member(int conversation_id, int user_id);
 	void add_message(int user_id, std::string password, int conversation_id, int message_id, std::string text);

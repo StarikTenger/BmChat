@@ -108,7 +108,7 @@ int Database::check_password(int user_id, std::string password) {
 	char u_id[20];
 	itoa(user_id, u_id, 10);
 	path += u_id;
-	path += "\\password.json";
+	path += "\\Password.json";
 	rapidjson::Document doc;
 	int ans = get_data(path, &doc);
 	if (!ans)
@@ -123,7 +123,7 @@ void Database::create_user(std::string username, std::string password, int user_
 	std::string path = "\\Users\\", lp;
 	path += u_id;
 
-	lp = path +"\\username.json";
+	lp = path +"\\Username.json";
 	rapidjson::Document data;
 	username = string_parce(username);
 	rapidjson::StringStream s(username.c_str());
@@ -131,7 +131,7 @@ void Database::create_user(std::string username, std::string password, int user_
 	set_data(lp, &data);
 
 	rapidjson::Document data2;
-	lp = path + "\\password.json";
+	lp = path + "\\Password.json";
 	password = string_parce(password);
 	rapidjson::StringStream s2(password.c_str());
 	data2.ParseStream(s2);
@@ -193,14 +193,14 @@ void Database::create_conversation(int user_id, std::string password, std::strin
 	std::string path = "\\Conversations\\", lp;
 	path += c_id;
 
-	lp = path + "\\max_message_id.json";
+	lp = path + "\\Max_message_id.json";
 	rapidjson::Document d;
 	std::string num = "[0]";
 	rapidjson::StringStream s1(num.c_str());
 	d.ParseStream(s1);
 	set_data(lp, &d);
 
-	lp = path + "\\conversation_name.json";
+	lp = path + "\\Conversation_name.json";
 	rapidjson::Document data;
 	conversation_name = string_parce(conversation_name);
 	rapidjson::StringStream s(conversation_name.c_str());
@@ -216,7 +216,7 @@ int Database::new_message_id(int conversation_id) {
 	std::string path = "\\Conversations\\", lp;
 	path += c_id;
 
-	lp = path + "\\max_message_id.json";
+	lp = path + "\\Max_message_id.json";
 	rapidjson::Document d;
 	std::vector<int> ans = { 0 };
 	if (get_data(lp, &d))
@@ -322,4 +322,25 @@ rapidjson::Document Database::get_user(int user_id) {
 	us.change_dialogs_ID(array_unparce(&data3));
 
 	return us.user_parce();
+}
+
+int Database::change_username(int user_id, std::string _password, std::string _new_username) {
+	char u_id[20];
+	itoa(user_id, u_id, 10);
+
+	rapidjson::Document d;
+	std::string path = "\\Users\\", lp;
+	path += u_id;
+
+	if (!check_password(user_id, _password))
+		return 0;
+
+	lp = path + "\\Username.json";
+	rapidjson::Document data;
+	_new_username = string_parce(_new_username);
+	rapidjson::StringStream s(_new_username.c_str());
+	data.ParseStream(s);
+	set_data(lp, &data);
+
+	return 1;
 }

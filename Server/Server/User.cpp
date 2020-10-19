@@ -4,11 +4,38 @@
 //	password = "";
 //	user_ID = 0;
 //}
-User::User(std::string name, std::string pass, int ID) {
+User::User(std::string name, std::string pass, int ID, Network_client *_client) {
 	username = name;
 	password = pass;
 	user_ID = ID;
+	client = _client;
 }
+
+std::string User::string_parce(std::string str)
+{
+	std::string ans = "[";
+	for (int i = 0; i < str.size(); i++) {
+		int k = str[i];
+		char buff[5];
+		itoa(k, buff, 10);
+		ans += buff;
+		ans += ',';
+	}
+	ans[ans.size() - 1] = ']';
+	return ans;
+}
+
+std::string User::string_unparce(rapidjson::Document* d)
+{
+	std::string ans = "";
+	if (!((*d).IsArray()))
+		return ans;
+	for (auto i = (*d).GetArray().Begin(); i != (*d).GetArray().End(); i++) {
+		ans += (char)i->GetInt();
+	}
+	return ans;
+}
+
 
 rapidjson::Document User::user_parce() {
 	std::string ans = "[";
@@ -76,8 +103,12 @@ bool User::is_password_correct (std::string pass) {
 bool User::change_password(std::string old_pass, std::string new_pass) {
 	if (is_password_correct(old_pass))
 		password = new_pass;
+	rapidjson::Document d;
+	new_pass = string_parce(new_pass);
+	rapidjson::StringStream s(new_pass.c_str());
+	d.ParseStream(s);
+	client->send(3, &d);
 	return is_password_correct(new_pass);
-	//обращение к серверу с целью обновления информации о password пользователя
 }
 std::string User::get_username() {
 	return username;
@@ -90,24 +121,22 @@ std::vector <int> User::get_dialogs_ID() {
 }
 void User::change_username(std::string new_name) {
 	username = new_name;
-	//обращение к серверу с целью обновления информации о username пользователя
+	rapidjson::Document d;
+	new_name = string_parce(new_name);
+	rapidjson::StringStream s(new_name.c_str());
+	d.ParseStream(s);
+	client->send(2, &d);
 }
-void User::change_user_ID(int new_ID) {
-	user_ID = new_ID;
-	//обращение к серверу с целью обновления информации о user_ID пользователя
-}
-void User::add_dialog_ID(int ID) {
+
+void User::enter_the_dialog(int ID) {
 	dialogs_ID.push_back(ID);
+
 	//обращение к серверу с целью обновления информации о dialogs_ID пользователя
 }
 void User::delete_dialog_ID(int ID) {
 	for (auto it = dialogs_ID.begin(); it != dialogs_ID.end(); it++)
 		if (*it == ID)
 			dialogs_ID.erase(it);
-	//обращение к серверу с целью обновления информации о dialogs_ID пользователя
-}
-void User::change_dialogs_ID(std::vector <int> IDs) {
-	dialogs_ID = IDs;
 	//обращение к серверу с целью обновления информации о dialogs_ID пользователя
 }
 void User::send_message(Message text) {

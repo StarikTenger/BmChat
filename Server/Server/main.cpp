@@ -98,8 +98,8 @@ int main() {
                             int op_code;
                             rapidjson::Document doc;
                             packet >> op_code >> doc;
-                            string username, password, conversation_name;
-                            int user_id, conversation_id;
+                            string username, password, conversation_name, new_pass, text;
+                            int user_id, conversation_id, message_id, new_id;
                             switch (op_code) {
                             case 0:
                                 user_id = get_string(get_string(doc.Begin(), &username), &password)->GetInt();
@@ -112,23 +112,44 @@ int main() {
                                 it++;
                                 conversation_id = it->GetInt();
                                 database.create_conversation(user_id, password, conversation_name, conversation_id);
+                                sendPacket << 1;
                                 break;
                             case 2:
-                                user_id = get_string(get_string(doc.Begin(), &username), &password)->GetInt();
-                                database.change_username(user_id, password, username);
+                                user_id = get_string(get_string(doc.Begin(), &password), &username)->GetInt();
+                                sendPacket << database.change_username(user_id, password, username);
                                 break;
                             case 3:
-                                ;
+                                user_id = get_string(get_string(doc.Begin(), &password), &new_pass)->GetInt();
+                                sendPacket << database.change_password(user_id, password, new_pass);
                                 break;
-                            case 4:;
+                            case 4:
+                                auto it = get_string(doc.Begin(), &password);
+                                user_id = it->GetInt();
+                                it++;
+                                conversation_id = it->GetInt();
+                                sendPacket << database.check_password(user_id, password);
+                                if (database.check_password(user_id, password))
+                                    database.add_member(conversation_id, user_id);
                                 break;
-                            case 5:;
+                            case 5:
+                                auto it = get_string(get_string(doc.Begin(), &password), &text);
+                                user_id = it->GetInt();
+                                it++;
+                                conversation_id = it->GetInt();
+                                it++;
+                                message_id = it->GetInt();
+                                database.add_message(user_id, password, conversation_id, message_id, text);
+                                sendPacket << 1;
                                 break;
-                            case 6:;
+                            case 6:
+                                sendPacket << database.new_user_ID();
                                 break;
-                            case 7:;
+                            case 7:
+                                sendPacket << database.new_conversation_id();
                                 break;
-                            case 8:;
+                            case 8:
+                                conversation_id = (doc.Begin())->GetInt();
+                                sendPacket << database.new_message_id(conversation_id);
                                 break;
                             case 9:;
                                 break;

@@ -11,16 +11,40 @@
 2: set new username
 	expected: (password, new_username, user_id)
 	returns: if ((input correct) && (password correct) && (username have permission to change information)) {return 1;} else {return 0;} 
-3: 
+
+3: set new password
+	expected: (password, new_password, user_id)
+	returns:  if (input correct) {return 1;} else {return 0;}
+
+4: enter the dialog
+	expected: (password, user_id, conversation_id)
+	returns:
+
+5: send message
+	expected: (password, text, user_id, conversation_id, message_id)
+	returns:
+
+6: get new user id
+	expected: 
+	returns:  new user id
+
+7: get new conversation id
+	expected: 
+	returns:  new conversation id
+
+8: get new message id
+	expected: (conversation_id)
+	returns:  new message id
+
+9: get new user id
 	expected:
 	returns:
-4:
+
+10: get new user id
 	expected:
 	returns:
-5:
-	expected:
-	returns:
-6:
+
+11: get new user id
 	expected:
 	returns:
 ...

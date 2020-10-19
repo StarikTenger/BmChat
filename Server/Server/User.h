@@ -21,7 +21,7 @@
 class User {
 public:
 	//User();
-	User(std::string name = "", std::string pass = "", int ID = 0);
+	User(std::string name = "", std::string pass = "", int ID = 0, Network_client *_client);
 
 	rapidjson::Document user_parce();
 	void user_unparce(rapidjson::Document *d);
@@ -33,14 +33,15 @@ public:
 	int get_user_ID();
 	std::vector <int> get_dialogs_ID();
 	void change_username(std::string new_name);
-	void change_user_ID(int new_ID);
-	void add_dialog_ID(int ID);
+	void enter_the_dialog(int ID);
 	void delete_dialog_ID(int ID);
-	void change_dialogs_ID(std::vector <int> IDs);
 
 private:
+	Network_client* client;
 	std::string password;
 	std::string username;
 	std::vector <int> dialogs_ID;
+	std::string string_parce(std::string str);
+	std::string string_unparce(rapidjson::Document* d);
 	int user_ID;
 };

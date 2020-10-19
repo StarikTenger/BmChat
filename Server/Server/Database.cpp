@@ -344,3 +344,24 @@ int Database::change_username(int user_id, std::string _password, std::string _n
 
 	return 1;
 }
+
+int Database::change_password(int user_id, std::string password, std::string new_pass) {
+	char u_id[20];
+	itoa(user_id, u_id, 10);
+
+	rapidjson::Document d;
+	std::string path = "\\Users\\", lp;
+	path += u_id;
+
+	if (!check_password(user_id, password))
+		return 0;
+
+	lp = path + "\\Password.json";
+	rapidjson::Document data;
+	new_pass = string_parce(new_pass);
+	rapidjson::StringStream s(new_pass.c_str());
+	data.ParseStream(s);
+	set_data(lp, &data);
+
+	return 1;
+}

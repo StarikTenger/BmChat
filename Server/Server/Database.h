@@ -15,6 +15,7 @@
 #include <io.h>
 #include <direct.h>
 #include <vector>
+#include <set>
 #include "Message.h"
 
 class Database {
@@ -31,6 +32,7 @@ public:
 	void create_conversation(int user_id, std::string password, std::string conversation_name, int conversation_id);
 	void add_member(int conversation_id, int user_id);
 	void add_message(int user_id, std::string password, int conversation_id, int message_id, std::string text);
+	void delete_member(int user_id, std::string password, int conversation_id);
 	rapidjson::Document get_message(int conversation_id, int message_id);
 	rapidjson::Document get_members(int conversation_id);
 	rapidjson::Document get_user(int user_id);
@@ -44,4 +46,6 @@ private:
 	std::string string_unparce(rapidjson::Document* d);
 	std::string array_parce(std::vector<int>* v);
 	std::vector<int> array_unparce(rapidjson::Document* d);
+	std::string set_parce(std::set<int> *v);
+	std::set <int> set_unparce(rapidjson::Document* d);
 };

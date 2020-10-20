@@ -16,6 +16,28 @@ int Database::new_conversation_id() {
 	return max_conversation_id++;
 }
 
+std::string Database::set_parce(std::set<int> *v) {
+	std::string ans = "[";
+	for (auto i = (*v).begin(); i != (*v).end(); i++) {
+		char buff[5];
+		itoa(*i, buff, 10);
+		ans += buff;
+		ans += ',';
+	}
+	ans[ans.size() - 1] = ']';
+	return ans;
+}
+
+std::set <int> Database::set_unparce(rapidjson::Document *d) {
+	std::set<int> ans;
+	if (!((*d).IsArray()))
+		return ans;
+	for (auto i = (*d).GetArray().Begin(); i != (*d).GetArray().End(); i++) {
+		ans.insert(i->GetInt());
+	}
+	return ans;
+}
+
 std::string Database::array_parce(std::vector<int> *v){
 	std::string ans = "[";
 	for (int i = 0; i < (*v).size(); i++) {
@@ -148,40 +170,26 @@ void Database::add_member(int conversation_id, int user_id) {
 	create_path(local_path + lp);
 	rapidjson::Document d;
 	get_data(lp, &d);
-	std::vector<int> conversations_list = array_unparce(&d);
-	bool was = false;
-	for (int i = 0; i < conversations_list.size(); i++)
-		if (conversations_list[i] == conversation_id)
-			was = true;
-	if (!was)
-	{
-		rapidjson::Document data;
-		conversations_list.push_back(conversation_id);
-		std::string parced = array_parce(&conversations_list);
-		rapidjson::StringStream s(parced.c_str());
-		data.ParseStream(s);
-		set_data(lp, &data);
-	}
+	std::set<int> conversations_list = set_unparce(&d);
+	conversations_list.insert(conversation_id);
+	rapidjson::Document data;
+	std::string parced = set_parce(&conversations_list);
+	rapidjson::StringStream s(parced.c_str());
+	data.ParseStream(s);
+	set_data(lp, &data);
 
 	path = "\\Conversations\\";
 	lp = path + c_id + "\\Users.json";
 	create_path(local_path + lp);
 	rapidjson::Document d2;
 	get_data(lp, &d2);
-	std::vector<int> users_list = array_unparce(&d2);
-	was = false;
-	for (int i = 0; i < users_list.size(); i++)
-		if (users_list[i] == user_id)
-			was = true;
-	if (!was)
-	{
-		rapidjson::Document data2;
-		users_list.push_back(user_id);
-		std::string parced2 = array_parce(&users_list);
-		rapidjson::StringStream s2(parced2.c_str());
-		data2.ParseStream(s2);
-		set_data(lp, &data2);
-	}
+	std::set<int> users_list = set_unparce(&d2);
+	users_list.insert(user_id);
+	rapidjson::Document data2;
+	std::string parced2 = set_parce(&users_list);
+	rapidjson::StringStream s2(parced2.c_str());
+	data2.ParseStream(s2);
+	set_data(lp, &data2);
 }
 
 void Database::create_conversation(int user_id, std::string password, std::string conversation_name, int conversation_id) {
@@ -318,9 +326,7 @@ rapidjson::Document Database::get_user(int user_id) {
 	rapidjson::Document data3;
 	get_data(lp, &data3);
 	
-	User us(string_unparce(&data1), string_unparce(&data2), user_id);
-	us.change_dialogs_ID(array_unparce(&data3));
-
+	User us(string_unparce(&data1), string_unparce(&data2), user_id, NULL, array_unparce(&data3));
 	return us.user_parce();
 }
 
@@ -362,6 +368,41 @@ int Database::change_password(int user_id, std::string password, std::string new
 	rapidjson::StringStream s(new_pass.c_str());
 	data.ParseStream(s);
 	set_data(lp, &data);
-
+	
 	return 1;
+}
+
+void Database::delete_member(int user_id, std::string password, int conversation_id) {
+	char u_id[20], c_id[20];
+	itoa(conversation_id, c_id, 10);
+	itoa(user_id, u_id, 10);
+
+	if (!check_password(user_id, password))
+		return;
+
+	std::string path = "\\Users\\", lp;
+	lp = path + u_id + "\\Conversations.json";
+	create_path(local_path + lp);
+	rapidjson::Document d;
+	get_data(lp, &d);
+	std::set<int> conversations_list = set_unparce(&d);
+	conversations_list.erase(conversation_id);
+	rapidjson::Document data;
+	std::string parced = set_parce(&conversations_list);
+	rapidjson::StringStream s(parced.c_str());
+	data.ParseStream(s);
+	set_data(lp, &data);
+
+	path = "\\Conversations\\";
+	lp = path + c_id + "\\Users.json";
+	create_path(local_path + lp);
+	rapidjson::Document d2;
+	get_data(lp, &d2);
+	std::set<int> users_list = set_unparce(&d2);
+	users_list.erase(user_id);
+	rapidjson::Document data2;
+	std::string parced2 = set_parce(&users_list);
+	rapidjson::StringStream s2(parced2.c_str());
+	data2.ParseStream(s2);
+	set_data(lp, &data2);
 }

@@ -14,6 +14,7 @@
 #include <io.h>
 #include <direct.h>
 #include <vector>
+#include <set>
 #include "Message.h"
 #include <iostream>
 #include "Network_client.h"
@@ -21,7 +22,7 @@
 class User {
 public:
 	//User();
-	User(std::string name = "", std::string pass = "", int ID = 0, Network_client *_client);
+	User(std::string name = "", std::string pass = "", int ID = 0, Network_client* _client = NULL, std::set<int> dialogs_ids);
 
 	rapidjson::Document user_parce();
 	void user_unparce(rapidjson::Document *d);
@@ -31,16 +32,16 @@ public:
 	bool change_password(std::string old_pass, std::string new_pass);
 	std::string get_username();
 	int get_user_ID();
-	std::vector <int> get_dialogs_ID();
+	std::set <int> get_dialogs_ID();
 	void change_username(std::string new_name);
 	void enter_the_dialog(int ID);
-	void delete_dialog_ID(int ID);
+	void get_out_of_dialog(int ID);
 
 private:
 	Network_client* client;
 	std::string password;
 	std::string username;
-	std::vector <int> dialogs_ID;
+	std::set <int> dialogs_ID;
 	std::string string_parce(std::string str);
 	std::string string_unparce(rapidjson::Document* d);
 	int user_ID;

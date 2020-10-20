@@ -4,11 +4,12 @@
 //	password = "";
 //	user_ID = 0;
 //}
-User::User(std::string name, std::string pass, int ID, Network_client *_client) {
+User::User(std::string name, std::string pass, int ID, Network_client *_client, std::set<int> dialogs_ids) {
 	username = name;
 	password = pass;
 	user_ID = ID;
 	client = _client;
+	dialogs_ID = dialogs_ids;
 }
 
 std::string User::string_parce(std::string str)
@@ -116,7 +117,7 @@ std::string User::get_username() {
 int User::get_user_ID() {
 	return user_ID;
 }
-std::vector <int> User::get_dialogs_ID() {
+std::set <int> User::get_dialogs_ID() {
 	return dialogs_ID;
 }
 void User::change_username(std::string new_name) {
@@ -129,14 +130,12 @@ void User::change_username(std::string new_name) {
 }
 
 void User::enter_the_dialog(int ID) {
-	dialogs_ID.push_back(ID);
+	dialogs_ID.insert(ID);
 
 	//обращение к серверу с целью обновления информации о dialogs_ID пользователя
 }
-void User::delete_dialog_ID(int ID) {
-	for (auto it = dialogs_ID.begin(); it != dialogs_ID.end(); it++)
-		if (*it == ID)
-			dialogs_ID.erase(it);
+void User::get_out_of_dialog(int ID) {
+	dialogs_ID.erase(ID);
 	//обращение к серверу с целью обновления информации о dialogs_ID пользователя
 }
 void User::send_message(Message text) {

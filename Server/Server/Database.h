@@ -16,6 +16,7 @@
 #include <direct.h>
 #include <vector>
 #include <set>
+#include <map>
 #include "Message.h"
 
 class Database {
@@ -31,11 +32,12 @@ public:
 	int change_password(int user_id, std::string password, std::string new_pass);
 	void create_conversation(int user_id, std::string password, std::string conversation_name, int conversation_id);
 	void add_member(int conversation_id, int user_id);
-	void add_message(int user_id, std::string password, int conversation_id, int message_id, std::string text);
-	void delete_member(int user_id, std::string password, int conversation_id);
+	int add_message(int user_id, std::string password, int conversation_id, int message_id, std::string text);
+	int delete_member(int user_id, std::string password, int conversation_id);
 	rapidjson::Document get_message(int conversation_id, int message_id);
 	rapidjson::Document get_members(int conversation_id);
 	rapidjson::Document get_user(int user_id);
+	rapidjson::Document login(std::string username, std::string password);
 private:
 	std::string local_path; // path to server folder (any request to the system forms as request(local_path+path ...))
 	int max_user_id, max_conversation_id;
@@ -48,4 +50,6 @@ private:
 	std::vector<int> array_unparce(rapidjson::Document* d);
 	std::string set_parce(std::set<int> *v);
 	std::set <int> set_unparce(rapidjson::Document* d);
+	int get_user_id(std::string username);
+	std::string get_ASCII_string(std::string str);
 };

@@ -140,8 +140,7 @@ int main() {
                                 conversation_id = it->GetInt();
                                 it++;
                                 message_id = it->GetInt();
-                                database.add_message(user_id, password, conversation_id, message_id, text);
-                                sendPacket << 1;
+                                sendPacket << database.add_message(user_id, password, conversation_id, message_id, text);
                                 break;
                             case 6:
                                 sendPacket << database.new_user_ID();
@@ -158,11 +157,16 @@ int main() {
                                 user_id = it->GetInt();
                                 it++;
                                 conversation_id = it->GetInt();
-                                database.delete_member(user_id, password, conversation_id);
+                                sendPacket << database.delete_member(user_id, password, conversation_id);
                                 break;
-                            case 10:;
+                            case 10:
+                                get_string(get_string(doc.Begin(), &password), &username);
+                                sendPacket << database.login(username, password);
                                 break;
-                            case 11:;
+                            case 11:
+                                user_id = get_string(doc.Begin(), &password)->GetInt();
+                                if (database.check_password(user_id, password))
+                                    sendPacket << database.get_user(user_id);
                                 break;
                             case 12:;
                                 break;

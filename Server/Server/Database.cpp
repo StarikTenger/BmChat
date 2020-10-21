@@ -8,6 +8,17 @@ Database::Database(std::string _local_path) {
 	max_conversation_id = 0;
 }
 
+std::string Database::get_ASCII_string(std::string str) {
+	std::string ans;
+	for (int i = 0; i < str.size(); i++)
+	{
+		char buff[5];
+		itoa(str[i], buff, 10);
+		ans += buff;
+		ans += 'p';
+	}
+}
+
 int Database::new_user_ID() {
 	return max_user_id++;
 }
@@ -158,6 +169,15 @@ void Database::create_user(std::string username, std::string password, int user_
 	rapidjson::StringStream s2(password.c_str());
 	data2.ParseStream(s2);
 	set_data(lp, &data2);
+
+	rapidjson::Document data3;
+	lp = "\\Users\\IDs\\" + get_ASCII_string(username) + ".json";
+	std::string num = "[";
+	num += u_id;
+	num += "]";
+	rapidjson::StringStream s3(num.c_str());
+	data3.ParseStream(s3);
+	set_data(lp, &data3);
 }
 
 void Database::add_member(int conversation_id, int user_id) {
@@ -237,9 +257,9 @@ int Database::new_message_id(int conversation_id) {
 	return ans[0] - 1;
 }
 
-void Database::add_message(int user_id, std::string password, int conversation_id, int message_id, std::string text) {
+int Database::add_message(int user_id, std::string password, int conversation_id, int message_id, std::string text) {
 	if (check_password(user_id, password) == 0)
-		return;
+		return 0;
 
 	char c_id[20], u_id[20], m_id[20];
 	itoa(conversation_id, c_id, 10);
@@ -263,7 +283,7 @@ void Database::add_message(int user_id, std::string password, int conversation_i
 	rapidjson::StringStream s2(text.c_str());
 	data2.ParseStream(s2);
 	set_data(lp, &data2);
-
+	return 1;
 }
 
 rapidjson::Document Database::get_message(int conversation_id, int message_id) {
@@ -341,7 +361,24 @@ int Database::change_username(int user_id, std::string _password, std::string _n
 	if (!check_password(user_id, _password))
 		return 0;
 
+	rapidjson::Document data1, data2, data3;
+
 	lp = path + "\\Username.json";
+	get_data(lp, &data3);
+	std::string username = string_unparce(&data3);
+
+	std::string path1 = "\\Users\\IDs\\";
+	path1 += "\\Users\\IDs\\" + get_ASCII_string(username) + ".json";
+	std::string path2 = "\\Users\\IDs\\";
+	path2 += "\\Users\\IDs\\" + get_ASCII_string(_new_username) + ".json";
+	std::string num = "[-1]";
+	num = string_parce(num);
+	rapidjson::StringStream s1(num.c_str());
+	data2.ParseStream(s1);
+	get_data(path1, &data1);
+	set_data(path1, &data2);
+	set_data(path2, &data1);
+
 	rapidjson::Document data;
 	_new_username = string_parce(_new_username);
 	rapidjson::StringStream s(_new_username.c_str());
@@ -372,13 +409,13 @@ int Database::change_password(int user_id, std::string password, std::string new
 	return 1;
 }
 
-void Database::delete_member(int user_id, std::string password, int conversation_id) {
+int Database::delete_member(int user_id, std::string password, int conversation_id) {
 	char u_id[20], c_id[20];
 	itoa(conversation_id, c_id, 10);
 	itoa(user_id, u_id, 10);
 
 	if (!check_password(user_id, password))
-		return;
+		return 0;
 
 	std::string path = "\\Users\\", lp;
 	lp = path + u_id + "\\Conversations.json";
@@ -405,4 +442,24 @@ void Database::delete_member(int user_id, std::string password, int conversation
 	rapidjson::StringStream s2(parced2.c_str());
 	data2.ParseStream(s2);
 	set_data(lp, &data2);
+	return 1;
+}
+
+int Database::get_user_id(std::string username) {
+	rapidjson::Document data;
+	std::string path = "\\Users\\IDs\\";
+	path += "\\Users\\IDs\\" + get_ASCII_string(username) + ".json";
+	if (get_data(path, &data) == 0)
+		return -1;
+	return array_unparce(&data)[0];
+}
+
+rapidjson::Document Database::login(std::string username, std::string password) {
+	int id = get_user_id(username);
+	rapidjson::Document d;
+
+	if (id == -1 || check_password(id, password) == 0)
+		return d;
+
+	return get_user(id);
 }

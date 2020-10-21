@@ -40,12 +40,12 @@
 	expected: (password, user_id, conversation_id)
 	returns:
 
-10: get new user id
-	expected:
-	returns:
+10: login
+	expected: (password, username)
+	returns: user
 
-11: get new user id
-	expected:
+11: get user
+	expected: (password, user_id)
 	returns:
 ...
 */

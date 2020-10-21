@@ -117,6 +117,7 @@ void User::user_unparce(rapidjson::Document* d) {
 bool User::is_password_correct (std::string pass) {
 	return (pass == password);
 }
+
 bool User::change_password(std::string old_pass, std::string new_pass) {
 	if (is_password_correct(old_pass))
 		password = new_pass;
@@ -134,15 +135,19 @@ bool User::change_password(std::string old_pass, std::string new_pass) {
 	client->send(3, &d);
 	return is_password_correct(new_pass);
 }
+
 std::string User::get_username() {
 	return username;
 }
+
 int User::get_user_ID() {
 	return user_ID;
 }
+
 std::set <int> User::get_dialogs_ID() {
 	return dialogs_ID;
 }
+
 void User::change_username(std::string new_name) {
 	rapidjson::Document d;
 	username = new_name;
@@ -174,6 +179,7 @@ void User::enter_the_dialog(int ID) {
 	d.ParseStream(s);
 	client->send(4, &d);
 }
+
 void User::get_out_of_dialog(int ID) {
 	dialogs_ID.erase(ID);
 
@@ -189,6 +195,7 @@ void User::get_out_of_dialog(int ID) {
 	d.ParseStream(s);
 	client->send(9, &d);
 }
+
 void User::send_message(Message message) {
 	char pass_size[20], text_size[20], u_id[20], c_id[20], m_id[20];
 	itoa(password.size(), pass_size, 10);

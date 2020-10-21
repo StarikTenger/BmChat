@@ -17,6 +17,7 @@ std::string Database::get_ASCII_string(std::string str) {
 		ans += buff;
 		ans += 'p';
 	}
+	return ans;
 }
 
 int Database::new_user_ID() {

@@ -75,7 +75,7 @@ int main() {
     k.message_unparce(&(d.get_message(cid, mess_id)));
     std::cout << k.get_dialog_ID() << " " << k.get_message_ID() << "\n" << k.get_text() << "\n" << k.get_user_ID() << "\n";*/
     //setlocale(LC_ALL, "");
-    Database database;
+    Database database("C:\\Users\\mea25\\Desktop\\yu");
     TcpListener listener;
     SocketSelector selector;
     vector<TcpSocket*> clients;

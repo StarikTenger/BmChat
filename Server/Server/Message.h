@@ -6,7 +6,6 @@
 #include <stream.h>
 #include <string>
 #include <fstream>
-#include "User.h"
 #include <cstdio>
 #include <filereadstream.h>
 #include <filewritestream.h>

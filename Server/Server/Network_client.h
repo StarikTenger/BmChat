@@ -36,8 +36,8 @@
 	expected: (conversation_id)
 	returns:  new message id
 
-9: get new user id
-	expected:
+9: get out of the dialog
+	expected: (password, user_id, conversation_id)
 	returns:
 
 10: get new user id
@@ -57,7 +57,6 @@
 #include <stream.h>
 #include <string>
 #include <fstream>
-#include "User.h"
 #include <cstdio>
 #include <filereadstream.h>
 #include <filewritestream.h>
@@ -66,7 +65,6 @@
 #include <io.h>
 #include <direct.h>
 #include <vector>
-#include "Message.h"
 #include <SFML/Network.hpp>
 #include <iostream>
 #include <string>
@@ -87,5 +85,7 @@ private:
 	std::string serverIP;
 	sf::TcpSocket socket;
 	sf::Socket::Status status;
+	void sendDoc(sf::Packet* packet, const rapidjson::Document* doc);
+	void getDoc(sf::Packet* packet, rapidjson::Document* doc);
 };
 

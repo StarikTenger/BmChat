@@ -326,7 +326,7 @@ rapidjson::Document Database::get_user(int user_id) {
 	rapidjson::Document data3;
 	get_data(lp, &data3);
 	
-	User us(string_unparce(&data1), string_unparce(&data2), user_id, NULL, array_unparce(&data3));
+	User us(string_unparce(&data1), string_unparce(&data2), user_id, NULL, set_unparce(&data3));
 	return us.user_parce();
 }
 

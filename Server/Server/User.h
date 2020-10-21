@@ -22,12 +22,12 @@
 class User {
 public:
 	//User();
-	User(std::string name = "", std::string pass = "", int ID = 0, Network_client* _client = NULL, std::set<int> dialogs_ids);
+	User(std::string name = "", std::string pass = "", int ID = 0, Network_client* _client = NULL, std::set<int> dialogs_ids = {0});
 
 	rapidjson::Document user_parce();
 	void user_unparce(rapidjson::Document *d);
 
-	void send_message(Message text);
+	void send_message(Message message);
 	bool is_password_correct(std::string pass);
 	bool change_password(std::string old_pass, std::string new_pass);
 	std::string get_username();
@@ -38,7 +38,7 @@ public:
 	void get_out_of_dialog(int ID);
 
 private:
-	Network_client* client;
+	Network_client *client;
 	std::string password;
 	std::string username;
 	std::set <int> dialogs_ID;

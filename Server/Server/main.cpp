@@ -8,13 +8,13 @@
 #include <stringbuffer.h>
 #include <writer.h>
 #include "Database.h"
-#include "User.h"
 #include "Message.h"
+#include "Network_client.h"
 
 using namespace std;
 using namespace sf;
 
-sf::Packet& operator <<(sf::Packet& packet, rapidjson::Document& doc)
+sf::Packet& operator <<(sf::Packet& packet, const rapidjson::Document& doc)
 {
     packet << (doc.Size());
     for (auto i = doc.GetArray().Begin(); i != doc.GetArray().End(); i++) {
@@ -47,6 +47,7 @@ rapidjson::Value::ValueIterator get_string(rapidjson::Value::ValueIterator beg, 
     beg++;
     for (int i = 0; i < k; i++, beg++)
         *str += (char)beg->GetInt();
+    return beg;
 }
 
 int main() {
@@ -99,6 +100,7 @@ int main() {
                             rapidjson::Document doc;
                             packet >> op_code >> doc;
                             string username, password, conversation_name, new_pass, text;
+                            rapidjson::Value::ValueIterator it;
                             int user_id, conversation_id, message_id, new_id;
                             switch (op_code) {
                             case 0:
@@ -107,7 +109,7 @@ int main() {
                                 sendPacket << 1;
                                 break;
                             case 1:
-                                auto it = get_string(get_string(doc.Begin(), &password), &conversation_name);
+                                it = get_string(get_string(doc.Begin(), &password), &conversation_name);
                                 user_id = it->GetInt();
                                 it++;
                                 conversation_id = it->GetInt();
@@ -123,7 +125,7 @@ int main() {
                                 sendPacket << database.change_password(user_id, password, new_pass);
                                 break;
                             case 4:
-                                auto it = get_string(doc.Begin(), &password);
+                                it = get_string(doc.Begin(), &password);
                                 user_id = it->GetInt();
                                 it++;
                                 conversation_id = it->GetInt();
@@ -132,7 +134,7 @@ int main() {
                                     database.add_member(conversation_id, user_id);
                                 break;
                             case 5:
-                                auto it = get_string(get_string(doc.Begin(), &password), &text);
+                                it = get_string(get_string(doc.Begin(), &password), &text);
                                 user_id = it->GetInt();
                                 it++;
                                 conversation_id = it->GetInt();
@@ -151,7 +153,12 @@ int main() {
                                 conversation_id = (doc.Begin())->GetInt();
                                 sendPacket << database.new_message_id(conversation_id);
                                 break;
-                            case 9:;
+                            case 9:
+                                it = get_string(doc.Begin(), &password);
+                                user_id = it->GetInt();
+                                it++;
+                                conversation_id = it->GetInt();
+                                database.delete_member(user_id, password, conversation_id);
                                 break;
                             case 10:;
                                 break;

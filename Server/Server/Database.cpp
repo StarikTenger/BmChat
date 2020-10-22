@@ -368,9 +368,9 @@ int Database::change_username(int user_id, std::string _password, std::string _n
 	get_data(lp, &data3);
 	std::string username = string_unparce(&data3);
 
-	std::string path1 = "\\Users\\IDs\\";
+	std::string path1;
 	path1 += "\\Users\\IDs\\" + get_ASCII_string(username) + ".json";
-	std::string path2 = "\\Users\\IDs\\";
+	std::string path2;
 	path2 += "\\Users\\IDs\\" + get_ASCII_string(_new_username) + ".json";
 	std::string num = "[-1]";
 	num = string_parce(num);
@@ -449,7 +449,7 @@ int Database::delete_member(int user_id, std::string password, int conversation_
 int Database::get_user_id(std::string username) {
 	rapidjson::Document data;
 	std::string path = "\\Users\\IDs\\";
-	path += "\\Users\\IDs\\" + get_ASCII_string(username) + ".json";
+	path += get_ASCII_string(username) + ".json";
 	if (get_data(path, &data) == 0)
 		return -1;
 	return array_unparce(&data)[0];
@@ -459,8 +459,11 @@ rapidjson::Document Database::login(std::string username, std::string password) 
 	int id = get_user_id(username);
 	rapidjson::Document d;
 
+	std::cout << "\n**" << id << "**\n";
+
 	if (id == -1 || check_password(id, password) == 0)
 		return d;
 
+	std::cout << "\n**" << id << "**\n";
 	return get_user(id);
 }

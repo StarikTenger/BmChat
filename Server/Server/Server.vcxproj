@@ -77,8 +77,8 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>C:\libraries\SFML-2.5.1\include;$(IncludePath)</IncludePath>
-    <LibraryPath>C:\libraries\SFML-2.5.1\lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>C:\libraries\SFML-2.5.1\include;$(IncludePath);C:\libraries\rapidjson</IncludePath>
+    <LibraryPath>C:\libraries\SFML-2.5.1\lib;$(LibraryPath);C:\libraries\rapidjson</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
@@ -152,19 +152,15 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Database.cpp" />
-    <ClCompile Include="Dialog.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Message.cpp" />
     <ClCompile Include="Network_client.cpp" />
-    <ClCompile Include="Network_database.cpp" />
     <ClCompile Include="User.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Database.h" />
-    <ClInclude Include="Dialog.h" />
     <ClInclude Include="Message.h" />
     <ClInclude Include="Network_client.h" />
-    <ClInclude Include="Network_database.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="User.h" />
   </ItemGroup>

@@ -1,4 +1,5 @@
 #define _CRT_NONSTDC_NO_DEPRECATE
+#define _CRT_SECURE_NO_WARNINGS
 #include <SFML/Network.hpp>
 #include <iostream>
 #include <string>
@@ -74,6 +75,7 @@ int main() {
     k.message_unparce(&(d.get_message(cid, mess_id)));
     std::cout << k.get_dialog_ID() << " " << k.get_message_ID() << "\n" << k.get_text() << "\n" << k.get_user_ID() << "\n";
     User l_us;
+    cout << "\n" << us.get_username() << "\n";
     l_us.user_unparce(&d.login(us.get_username(), "admin"));
     cout << l_us.get_username() << " " << l_us.get_user_ID() << " " << l_us.is_password_correct("admin") << "\n";
     d.change_password(l_us.get_user_ID(), "admin", "ain");

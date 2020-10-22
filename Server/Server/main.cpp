@@ -51,8 +51,7 @@ rapidjson::Value::ValueIterator get_string(rapidjson::Value::ValueIterator beg, 
 }
 
 int main() {
-
-    /*                       ***Not Full Database test***
+    //                       ***Not Full Database test***
     Database d("C:\\Users\\mea25\\Desktop\\yu");
     int uid = d.new_user_ID(), cid = d.new_conversation_id(), uid2 = d.new_user_ID();
     d.create_user("Admin", "admin", uid);
@@ -73,9 +72,16 @@ int main() {
     std::cout << "\n";
     Message k;
     k.message_unparce(&(d.get_message(cid, mess_id)));
-    std::cout << k.get_dialog_ID() << " " << k.get_message_ID() << "\n" << k.get_text() << "\n" << k.get_user_ID() << "\n";*/
+    std::cout << k.get_dialog_ID() << " " << k.get_message_ID() << "\n" << k.get_text() << "\n" << k.get_user_ID() << "\n";
+    User l_us;
+    l_us.user_unparce(&d.login(us.get_username(), "admin"));
+    cout << l_us.get_username() << " " << l_us.get_user_ID() << " " << l_us.is_password_correct("admin") << "\n";
+    d.change_password(l_us.get_user_ID(), "admin", "ain");
+    d.change_username(l_us.get_user_ID(), "ain", "Cool_guy");
+    l_us.user_unparce(&d.login(l_us.get_username(), "ain"));
+    cout << l_us.get_username() << " " << l_us.get_user_ID() << " " << l_us.is_password_correct("admin") << "\n";
     //setlocale(LC_ALL, "");
-    Database database("C:\\Users\\mea25\\Desktop\\yu");
+    /*Database database("C:\\Users\\mea25\\Desktop\\yu");
     TcpListener listener;
     SocketSelector selector;
     vector<TcpSocket*> clients;
@@ -184,6 +190,6 @@ int main() {
     for (vector<TcpSocket*>::iterator it = clients.begin(); it != clients.end(); it++)
         delete* it;
 
-    system("pause");
+    system("pause");*/
     return 0;
 }
